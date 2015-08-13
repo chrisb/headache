@@ -1,5 +1,7 @@
 # HeadACHe
 
+[![Code Climate](https://img.shields.io/codeclimate/github/teampayoff/headache.svg?style=flat-square)](https://codeclimate.com/github/teampayoff/headache)
+
 Headache takes a lot of the guesswork out of building [ACH (Automated Clearing House)](https://en.wikipedia.org/wiki/Automated_Clearing_House) files to move money around between banks.
 
 Headache is built on top of the excellent [Fixy gem](https://github.com/Chetane/fixy) for handling fixed-width files.
@@ -57,6 +59,7 @@ document = Headache::Document.new.tap do |document|
     file_header.origin           = '1111111111'
     file_header.reference_code   = '11111111'
   end
+
   document.batch.tap do |batch|
     batch.type                   = :debit
     batch.odfi_id                = '11111111'
