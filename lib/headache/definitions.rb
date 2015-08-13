@@ -1,0 +1,6 @@
+require 'headache/definition/common'
+require 'headache/definition/file_header'
+require 'headache/definition/batch_header'
+require 'headache/definition/entry'
+require 'headache/definition/batch_control'
+require 'headache/definition/file_control'

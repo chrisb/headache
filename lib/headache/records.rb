@@ -1,0 +1,6 @@
+require 'headache/record/file_header'
+require 'headache/record/batch_header'
+require 'headache/record/entry'
+require 'headache/record/batch_control'
+require 'headache/record/file_control'
+require 'headache/record/overflow'
