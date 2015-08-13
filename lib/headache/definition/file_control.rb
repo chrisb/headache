@@ -13,7 +13,7 @@ module Headache
         field :total_debit,  12, '32-43', :numeric
         field :total_credit, 12, '44-55', :numeric
         field :reserved,     39, '56-94', :nothing
-
+        
         field_value :reserved, ''
       end
     end
