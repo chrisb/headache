@@ -64,7 +64,7 @@ module Headache
     end
 
     def <<(entry_or_entries)
-      (entries.is_a?(Array) ? entry_or_entries : [entry_or_entries]).each { |e| add_entry e }
+      [(entries.is_a?(Array) ? entry_or_entries : [entry_or_entries])].flatten.each { |e| add_entry e }
       self
     end
 
