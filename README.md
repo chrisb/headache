@@ -51,7 +51,7 @@ Further, Headache abstracts an ACH record _definition_ from the record itself; s
 Create a new ACH document (some optional fields are omitted in this example):
 
 ```ruby
-document = Headache::Document.new.tap do |document|
+ach_doc = Headache::Document.new.tap do |document|
   document.header.tap do |file_header|
     file_header.destination_name = '1ST INTERNET BANK'
     file_header.destination      = '111111111' # Originating DFI number
@@ -90,7 +90,7 @@ end
 Finally, you can generate the file:
 
 ```ruby
-document.generate_to_file 'ACH.txt'
+ach_doc.generate_to_file 'ACH.txt'
 ```
 
 ## Development
