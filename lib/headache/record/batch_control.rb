@@ -1,6 +1,6 @@
 module Headache
   module Record
-    class BatchControl < Fixy::Record
+    class BatchControl < Headache::Record::Base
       include Definition::BatchControl
 
       attr_accessor :batch, :document

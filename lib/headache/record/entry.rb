@@ -1,6 +1,6 @@
 module Headache
   module Record
-    class Entry < Fixy::Record
+    class Entry < Headache::Record::Base
       include Definition::Entry
 
       attr_accessor :routing_number, :account_number, :amount,
