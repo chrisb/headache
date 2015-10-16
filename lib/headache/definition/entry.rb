@@ -20,14 +20,6 @@ module Headache
         field_value :addenda_record, '0'
         field_value :discretionary,  ''
       end
-
-      def routing_identification
-        routing_number.first 8
-      end
-
-      def check_digit
-        routing_number.last 1
-      end
     end
   end
 end

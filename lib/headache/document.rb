@@ -18,6 +18,37 @@ module Headache
       set_class :control, klass
     end
 
+    def self.parse(string_or_file)
+      records = string_or_file.respond_to?(:read) ? string_or_file.read : string_or_file
+      records = records.split(LINE_SEPARATOR)
+                  .reject { |line| line == Headache::Record::Overflow.new.generate.strip }
+
+      invalid_lines = records.reject { |line| Headache::Record::FileHeader.record_type_codes.values.include?(line.first.to_i) }
+      raise "uknown record type(s): #{invalid_lines.map(&:first).inspect}" if invalid_lines.any?
+
+      self.new.tap do |document|
+        document.instance_eval do
+          @header  = @@record_classes[:header].new(self).parse(records.shift)
+          @control = @@record_classes[:control].new(self).parse(records.pop)
+        end
+        get_batches(records).each { |b| document.add_batch Headache::Batch.new(self).parse(b) }
+      end
+    end
+
+    def self.get_batches(records)
+      batches = []
+      batch   = []
+      records.each do |line|
+        if line.starts_with?(Headache::Record::BatchHeader.record_type_codes[:batch_header].to_s)
+          batches << batch unless batches.empty? && batch == []
+          batch = [line]
+        else
+          batch << line
+        end
+      end
+      batches << batch
+    end
+
     def self.set_class(type, klass)
       fail "unknown record class: #{type}" unless @@record_classes[type].present?
       @@record_classes[type] = klass
@@ -59,12 +90,24 @@ module Headache
       @control ||= @@record_classes[:control].new self
     end
 
+    def records
+      ([ header ] << batches.map do |batch|
+        [ batch.header, batch.entries, batch.control ]
+      end << control).flatten # .compact
+    end
+
     def lines
       @content.split("\n").count
     end
 
     def overflow_lines_needed
       10 - lines % 10
+    end
+
+    def to_h
+      {  file_header: @header.to_h,
+             batches: @batches.map(&:to_h),
+        file_control: @control.to_h }
     end
 
     def build

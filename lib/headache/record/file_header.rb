@@ -12,7 +12,7 @@ module Headache
       end
 
       def destination
-        ' ' + (@destination || '')
+        ' ' + (@destination || '').to_s
       end
 
       def creation_date

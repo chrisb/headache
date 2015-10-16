@@ -5,8 +5,9 @@ module Headache
 
       attr_accessor :batch, :document
 
-      delegate :entry_hash, :total_debit, :total_credit, :batch_number,
-               :service_code, :odfi_id, :company_identification, to: :batch
+      delegate :entry_hash, :batch_number, :total_debit, :total_credit,
+               :total_debit=, :total_credit=, :service_code, :odfi_id,
+               :company_identification, :entry_hash=, to: :batch
 
       def initialize(batch, document)
         @batch = batch
@@ -16,7 +17,6 @@ module Headache
       def entry_count
         batch.size
       end
-
     end
   end
 end
