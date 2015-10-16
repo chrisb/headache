@@ -36,7 +36,7 @@ module Headache
       end
 
       def to_h
-        str = self.generate.gsub "\r\n", ''
+        str = self.generate.gsub Headache::Document::LINE_SEPARATOR, ''
         self.class.parse_fields(str)
       end
 

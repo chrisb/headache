@@ -2,6 +2,8 @@ module Headache
   class Document < Fixy::Document
     attr_reader :batches
 
+    LINE_SEPARATOR = "\r\n"
+
     delegate :add_entry, :'<<', to: :first_batch
 
     @@record_classes = { batch: Batch,

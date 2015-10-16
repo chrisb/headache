@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Headache::Record::Entry do
   let(:entry) { build :entry }
-  let(:line) { entry.generate.gsub "\r\n", '' }
+  let(:line) { entry.generate.gsub Headache::Document::LINE_SEPARATOR, '' }
 
   it 'should be 94 characters in length' do
     expect(line.length).to eq(94)
