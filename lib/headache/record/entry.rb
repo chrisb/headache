@@ -26,6 +26,19 @@ module Headache
         end
       end
 
+      def to_h
+        new_hsh = {}
+        super.each_pair do |key, value|
+          next if key == :check_digit
+          if key == :routing_identification
+            key   = :routing_number
+            value = @routing_number
+          end
+          new_hsh[key] = value
+        end
+        new_hsh
+      end
+
       def routing_identification
         @routing_identification || routing_number.to_s.first(8)
       end
