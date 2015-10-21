@@ -1,6 +1,6 @@
 # HeadACHe
 
-[![Code Climate](https://img.shields.io/codeclimate/github/teampayoff/headache.svg?style=flat-square)](https://codeclimate.com/github/teampayoff/headache)
+[![Code Climate](https://img.shields.io/codeclimate/github/teampayoff/headache.svg?style=flat-square)](https://codeclimate.com/github/teampayoff/headache) [![Travis CI](https://img.shields.io/travis/teampayoff/headache.svg?style=flat-square)](https://travis-ci.org/teampayoff/headache) [![Coverage](https://img.shields.io/coveralls/teampayoff/headache.svg?style=flat-square)](https://coveralls.io/r/teampayoff/headache)
 
 Headache takes a lot of the guesswork out of building [ACH (Automated Clearing House)](https://en.wikipedia.org/wiki/Automated_Clearing_House) files to move money around between banks.
 
