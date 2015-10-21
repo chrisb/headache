@@ -10,6 +10,14 @@ module Headache
                          header: Record::FileHeader,
                          control: Record::FileControl }
 
+    def self.header_class
+      @@record_classes[:header]
+    end
+
+    def self.control_class
+      @@record_classes[:control]
+    end
+
     def self.header=(klass)
       set_class :header, klass
     end
@@ -18,21 +26,24 @@ module Headache
       set_class :control, klass
     end
 
-    def self.parse(string_or_file)
+    def self.extract_lines(string_or_file)
       records = string_or_file.respond_to?(:read) ? string_or_file.read : string_or_file
       records = records.split(LINE_SEPARATOR)
                   .reject { |line| line == Headache::Record::Overflow.new.generate.strip }
+    end
 
+    def self.cleanse_records(records)
       invalid_lines = records.reject { |line| Headache::Record::FileHeader.record_type_codes.values.include?(line.first.to_i) }
       raise "uknown record type(s): #{invalid_lines.map(&:first).inspect}" if invalid_lines.any?
+      records
+    end
 
-      self.new.tap do |document|
-        document.instance_eval do
-          @header  = @@record_classes[:header].new(self).parse(records.shift)
-          @control = @@record_classes[:control].new(self).parse(records.pop)
-        end
-        get_batches(records).each { |b| document.add_batch Headache::Batch.new(self).parse(b) }
-      end
+    def self.parse(string_or_file)
+      records = cleanse_records(extract_lines string_or_file)
+      header  = header_class.new(self).parse(records.shift)
+      control = control_class.new(self).parse(records.pop)
+      batches = get_batches(records).map { |b| Headache::Batch.new(self).parse(b) }
+      new header, control, batches
     end
 
     def self.get_batches(records)
@@ -54,8 +65,10 @@ module Headache
       @@record_classes[type] = klass
     end
 
-    def initialize
-      @batches = []
+    def initialize(header = nil, control = nil, batches = [])
+      @header  = header
+      @control = control
+      @batches = batches
     end
 
     def first_batch
