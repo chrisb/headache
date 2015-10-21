@@ -13,7 +13,10 @@ module Headache
 
         field :record_type_code, 1, '1-1', :alphanumeric
 
-        def record_type_codes
+        delegate :record_type_codes, to: :class
+        delegate :record_type_code,  to: :class
+
+        def self.record_type_codes
           { file_header: 1,
            batch_header: 5,
                   entry: 6,
@@ -21,8 +24,8 @@ module Headache
            file_control: 9 }
         end
 
-        def record_type_code
-          record_type = self.class.name.demodulize.underscore
+        def self.record_type_code
+          record_type = name.demodulize.underscore
           record_type_codes[record_type.to_sym]
         end
       end

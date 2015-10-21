@@ -1,6 +1,6 @@
 module Headache
   module Record
-    class Overflow < Fixy::Record
+    class Overflow < Headache::Record::Base
       include Formatters
 
       set_record_length 94

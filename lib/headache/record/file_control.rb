@@ -1,6 +1,6 @@
 module Headache
   module Record
-    class FileControl < Fixy::Record
+    class FileControl < Headache::Record::Base
       include Definition::FileControl
 
       attr_accessor :document

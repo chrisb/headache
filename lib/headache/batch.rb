@@ -5,7 +5,8 @@ module Headache
     attr_accessor :type, :document, :batch_number, :service_code, :odfi_id,
                   :company_name, :company_identification, :effective_date,
                   :company_name, :company_identification, :discretionary,
-                  :entry_class_code, :entry_description
+                  :entry_class_code, :entry_description, :descriptive_date,
+                  :total_debit, :total_credit, :entry_hash
 
     @@record_classes = { header: Record::BatchHeader,
                          control: Record::BatchControl }
@@ -23,6 +24,17 @@ module Headache
       @@record_classes[type] = klass
     end
 
+    def parse(records)
+      @header  = @@record_classes[:header].new(self, @document).parse(records.shift)
+      @control = @@record_classes[:control].new(self, @document).parse(records.pop)
+      records.each { |r| @members << Headache::Record::Entry.new(self, @document).parse(r) }
+      self
+    end
+
+    def descriptive_date
+      @descriptive_date || Date.today
+    end
+
     def effective_date
       @effective_date || Date.today
     end
@@ -30,6 +42,12 @@ module Headache
     def initialize(document = nil)
       @document = document
       @members  = []
+    end
+
+    def self.type_from_service_code(code)
+      return :credit if code.to_s == '220'
+      return :debit  if code.to_s == '225'
+      fail "unknown service code: #{code.inspect} (expecting 220 or 225)"
     end
 
     def service_code
@@ -51,11 +69,17 @@ module Headache
     end
 
     def batch_number
-      @batch_number || document.batches.index(batch) + 1
+      @batch_number || document.batches.index(self) + 1
+    end
+
+    def to_h
+      {  batch_header: @header.to_h,
+              entries: @members.to_a.map(&:to_h),
+        batch_control: @control.to_h }
     end
 
     def entry_hash
-      entries.map(&:routing_identification).map(&:to_i).sum
+      @entry_hash || entries.map(&:routing_number).map(&:to_i).sum
     end
 
     def add_entry(entry)
@@ -73,11 +97,11 @@ module Headache
     end
 
     def total_debit
-      entries.map(&:amount).select { |amt| amt < 0 }.map(&:abs).sum
+      @total_debit || entries.map(&:amount).select { |amt| (amt || 0) < 0 }.map(&:abs).sum
     end
 
     def total_credit
-      entries.map(&:amount).select { |amt| amt > 0 }.sum
+      @total_credit || entries.map(&:amount).select { |amt| (amt || 0) > 0 }.sum
     end
 
   end

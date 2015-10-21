@@ -1,6 +1,6 @@
 module Headache
   module Record
-    class FileHeader < Fixy::Record
+    class FileHeader < Headache::Record::Base
       include Definition::FileHeader
 
       attr_accessor :reference_code, :creation_time, :origin, :origin_name,
@@ -12,7 +12,7 @@ module Headache
       end
 
       def destination
-        ' ' + (@destination || '')
+        ' ' + (@destination || '').to_s
       end
 
       def creation_date

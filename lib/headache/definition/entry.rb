@@ -10,7 +10,7 @@ module Headache
         field :routing_identification, 8,  '4-11', :numeric
         field :check_digit,            1, '12-12', :numeric
         field :account_number,        17, '13-29', :alphanumeric
-        field :amount,                10, '30-39', :numeric
+        field :amount,                10, '30-39', :numeric_value
         field :internal_id,           15, '40-54', :alphanumeric
         field :individual_name,       22, '55-76', :alphanumeric
         field :discretionary,          2, '77-78', :alphanumeric
@@ -19,14 +19,6 @@ module Headache
 
         field_value :addenda_record, '0'
         field_value :discretionary,  ''
-      end
-
-      def routing_identification
-        routing_number.first 8
-      end
-
-      def check_digit
-        routing_number.last 1
       end
     end
   end
