@@ -47,7 +47,7 @@ module Headache
       def parse(record_string)
         parse_fields(record_string).each_pair do |field, value|
           if respond_to?("#{field}=")
-            send "#{field}=", normalize_field_value(field, value) if respond_to?("#{field}=")
+            send "#{field}=", normalize_field_value(field, value)
           end
         end
         self
