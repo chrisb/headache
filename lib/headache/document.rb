@@ -27,9 +27,8 @@ module Headache
     end
 
     def self.extract_lines(string_or_file)
-      records = string_or_file.respond_to?(:read) ? string_or_file.read : string_or_file
-      records = records.split(LINE_SEPARATOR)
-                  .reject { |line| line == Headache::Record::Overflow.new.generate.strip }
+      string = string_or_file.respond_to?(:read) ? string_or_file.read : string_or_file
+      string.split(LINE_SEPARATOR).reject { |line| line == Headache::Record::Overflow.new.generate.strip }
     end
 
     def self.cleanse_records(records)
@@ -40,8 +39,8 @@ module Headache
 
     def self.parse(string_or_file)
       records = cleanse_records(extract_lines string_or_file)
-      header  = header_class.new(self).parse(records.shift)
-      control = control_class.new(self).parse(records.pop)
+      header  = header_class.new(nil).parse(records.shift)
+      control = control_class.new(nil).parse(records.pop)
       batches = get_batches(records).map { |b| Headache::Batch.new(self).parse(b) }
       new header, control, batches
     end
@@ -69,6 +68,8 @@ module Headache
       @header  = header
       @control = control
       @batches = batches
+      @header.document  = self unless @header.nil?
+      @control.document = self unless @control.nil?
     end
 
     def first_batch
