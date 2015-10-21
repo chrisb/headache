@@ -1,6 +1,7 @@
 module Headache
   module Formatters
     include Fixy::Formatter::Alphanumeric
+    BLANK_DATE = "      "
 
     def format_alphanumeric(input, length)
       super(input, length).upcase
@@ -14,7 +15,7 @@ module Headache
       if input.respond_to?(:strftime)
         return input.strftime '%y%m%d'
       elsif input.blank?
-        return "      "
+        return BLANK_DATE
       else
         format_date Date.strptime(input.to_s, '%y%m%d'), length
       end
