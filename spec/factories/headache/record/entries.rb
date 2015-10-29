@@ -10,4 +10,10 @@ FactoryGirl.define do
     f.individual_name 'Bob Smith'
     f.transaction_code 'abc123def456'
   end
+
+  factory :another_entry, parent: :entry do |f|
+    f.routing_number '111111119'
+  end
+
+
 end
